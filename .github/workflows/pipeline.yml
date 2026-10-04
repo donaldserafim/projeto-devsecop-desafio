@@ -48,7 +48,7 @@ jobs:
       # Dica: use a action oficial "gitleaks/gitleaks-action@v2" e passe o
       - name: 🔑 Secrets Scanning
         uses: gitleaks/gitleaks-action@v3
-        run: echo "TODO - implemente o Secrets Scanning com Gitleaks aqui"
+        #run: echo "TODO - implemente o Secrets Scanning com Gitleaks aqui"
 
       # ❌ PASSO A IMPLEMENTAR — SAST com Semgrep
       # Dica: instale com "pip install semgrep" e rode
