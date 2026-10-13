@@ -1,0 +1,19 @@
+name: Resumo do Semgrep
+description: Publica o resultado do Semgrep no resumo da execução do GitHub Actions.
+inputs:
+  outcome:
+    description: Resultado da etapa de análise do Semgrep.
+    required: true
+  report:
+    description: Caminho do relatório JSON gerado pelo Semgrep.
+    default: semgrep.json
+runs:
+  using: composite
+  steps:
+    - name: Gerar resumo
+      shell: bash
+      env:
+        SEMGREP_OUTCOME: ${{ inputs.outcome }}
+        SEMGREP_REPORT: ${{ inputs.report }}
+        SUMMARY_ACTION_PATH: ${{ github.action_path }}
+      run: python "$SUMMARY_ACTION_PATH/summary.py"

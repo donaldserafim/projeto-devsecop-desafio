@@ -75,30 +75,16 @@ jobs:
       # --error: retorna código de saída 1 quando encontra problemas, fazendo o step falhar.
       # src/: limita a análise aos arquivos do diretório src.
       - name: 🔍 SAST - Semgrep
+        id: semgrep
         run: |
           semgrep scan --config auto --config p/xss --error --json --output semgrep.json src/
 
 
-      - name: Semgrep Summary
+      - name: 📋 Resultado do Semgrep
         if: always()
-        run: |
-          echo "## 🔍 Semgrep Security Scan" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-
-          if [ -f semgrep.json ]; then
-            jq -r '
-              "| Severidade | Regra | Arquivo | Linha |",
-              "|---|---|---|---|",
-              (.results[] |
-                "| \(.extra.severity) | \(.check_id) | \(.path) | \(.start.line) |")
-            ' semgrep.json >> "$GITHUB_STEP_SUMMARY"
-
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "**Total de vulnerabilidades:** $(jq '.results | length' semgrep.json)" >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Scan não gerou resultados." >> "$GITHUB_STEP_SUMMARY"
-          fi
-
+        uses: ./.github/actions/semgrep-summary
+        with:
+          outcome: ${{ steps.semgrep.outcome }}
 
       # ❌ PASSO A IMPLEMENTAR — SCA com Grype
       # Dica: primeiro, gere o package-lock pelo npm:
