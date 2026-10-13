@@ -63,6 +63,11 @@ jobs:
       - name: 🔍 SAST - Semgrep
         run: |
           python -m pip install semgrep
+          # semgrep scan: executa a análise estática do código (SAST).
+          # --config auto: seleciona regras do Registry conforme as linguagens e frameworks do projeto.
+          # --config p/xss: adiciona regras para detectar Cross-Site Scripting (XSS).
+          # --error: retorna código de saída 1 quando encontra problemas, fazendo o step falhar.
+          # src/: limita a análise aos arquivos do diretório src.
           semgrep scan --config auto --config p/xss --error src/
 
       # ❌ PASSO A IMPLEMENTAR — SCA com Grype
