@@ -25,13 +25,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      # ⚠️ Assim que remover segredos do código, passar pra cá
-      # Obs: não é uma alternativa tão robusta quanto um Vault por exemplo, mas já que o segredo estava em código....
-      # Dicas para cada variável:
-      #   - adicione um env 
-      #   - crie um segredo correspondente no github
-      #   - insira uma referência para encontrá-la no código (exemplo CHAVE = "__CHAVE__")
-      #   - injete a variável na referência, usando um sed 
+      # Usado o enviroments do github para armazenar as chaves e
+      # Usado o sed para trocar pelos valores do enviroment
+      # feito a validação para verificar se há substituição e necessitou
+      # adicionar a palavra enviroment para poder achar o cofre.
       - name: 🔐 Inserir Secrets no JavaScript
         env:
           APIKEY: ${{ secrets.APIKEY  }}
@@ -40,7 +37,6 @@ jobs:
           echo "Inserido Segredos no arquivo"
           sed -i "s|__DBPASSWORD__|$DBPASSWORD|g" src/script.js
           sed -i "s|__APIKEY__|$APIKEY|g" src/script.js
-          cat src/script.js
 
       - name: ⚙️ Build
         run: |
@@ -49,18 +45,25 @@ jobs:
           echo "Build OK!"
 
       # ❌ PASSO A IMPLEMENTAR — Secrets Scanning com Gitleaks
-      # Dica: use a action oficial "gitleaks/gitleaks-action@v2" e passe o
+      # Dica: use a action oficial "gitleaks/gitleaks-action@v2"
+      # foi implementado com a versão mais nova, que é a 3 e adicionado o arquivo de configuração
+      # .gitleaks.toml para adicionar a variavel do banco de dados.
       - name: 🔑 Secrets Scanning
         uses: gitleaks/gitleaks-action@v3
-        env: 
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
 
-      # ❌ PASSO A IMPLEMENTAR — SAST com Semgrep
-      # Dica: instale com "pip install semgrep" e rode
-      #   semgrep scan --config auto --config p/xss --error src/
+      - name: 🐍 Configurar Python para o SAST
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Analisa o código e interrompe a pipeline quando encontra vulnerabilidades.
       - name: 🔍 SAST - Semgrep
-        run: echo "TODO - implemente o SAST com Semgrep aqui"
+        run: |
+          python -m pip install semgrep
+          semgrep scan --config auto --config p/xss --error src/
 
       # ❌ PASSO A IMPLEMENTAR — SCA com Grype
       # Dica: primeiro, gere o package-lock pelo npm:

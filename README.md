@@ -17,7 +17,7 @@ A pipeline está **incompleta**. Os steps de segurança precisam ser implementad
 
 ## O que implementar
 - [ ] Secrets Scanning com **Gitleaks**
-- [ ] SAST com **Semgrep**
+- [x] SAST com **Semgrep**
 - [ ] SCA com **Grype**
 - [ ] Assinatura do artefato com cosign
 - [ ] Deploy com **GitHub Pages**
@@ -25,6 +25,12 @@ A pipeline está **incompleta**. Os steps de segurança precisam ser implementad
 ## Como a pipeline funciona
 > **Substitua este bloco pela sua explicação após implementar a pipeline.**
 > Descreva cada step, o que ele faz e por que ele é importante para a segurança.
+
+O step de SAST configura Python 3.12, instala o Semgrep e executa
+`semgrep scan --config auto --config p/xss --error src/`.
+As regras automáticas e de XSS analisam o código em `src/`; a opção `--error`
+faz o step falhar quando encontra problemas, bloqueando o deploy.
+Essa análise não exige token do Semgrep. As regras são baixadas do Registry.
 
 ## URL de Produção
 > Adicione aqui o link do GitHub Pages após o deploy.
