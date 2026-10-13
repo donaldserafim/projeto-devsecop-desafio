@@ -5,6 +5,6 @@
   "dependencies": {
     "lodash": "4.17.21",
     "express": "4.20.0",
-    "axios": "0.31.0"
+    "axios": "0.32.0"
   }
 }
