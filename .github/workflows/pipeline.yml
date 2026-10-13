@@ -169,7 +169,7 @@ jobs:
 
     steps:
       - name: ⬇️ Baixar o artefato assinado
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.3.0
         with:
           name: site-assinado
 
