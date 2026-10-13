@@ -37,9 +37,9 @@ jobs:
           DBPASSWORD: ${{ secrets.DBPASSWORD  }}
         run: |
           echo "Inserido Segredos no arquivo"
-          sed -i "s|__VAR__|$DBPASSWORD|g" src/script.js
-          sed -i "s|__DBPASSWORD__|$APIKEY|g" src/script.js
-          cat src/scripts.js
+          sed -i "s|__DBPASSWORD__|$DBPASSWORD|g" src/script.js
+          sed -i "s|__APIKEY__|$APIKEY|g" src/script.js
+          cat src/script.js
 
       - name: ⚙️ Build
         run: |
