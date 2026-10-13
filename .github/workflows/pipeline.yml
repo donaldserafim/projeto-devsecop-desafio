@@ -80,11 +80,15 @@ jobs:
           semgrep scan --config auto --config p/xss --error --json --output semgrep.json src/
 
 
+      # Saída em html para ficar mais claro os erros.
       - name: 📋 Resultado do Semgrep
         if: always()
         uses: ./.github/actions/semgrep-summary
         with:
           outcome: ${{ steps.semgrep.outcome }}
+
+
+
 
       # ❌ PASSO A IMPLEMENTAR — SCA com Grype
       # Dica: primeiro, gere o package-lock pelo npm:

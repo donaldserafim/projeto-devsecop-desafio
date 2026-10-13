@@ -28,7 +28,7 @@ elif data is None or findings or errors:
                 "> O resultado não confirma uma análise sem problemas. Consulte os logs do Semgrep."]
 else:
     summary += ["### ✅ APROVADO PELO SEMGREP", "",
-                "> Nenhum problema encontrado. Esta etapa permite que a pipeline continue."]
+                "> Nenhum problema encontrado."]
 
 def cell(value):
     return str(value).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("|", "&#124;").replace("\r", " ").replace("\n", " ")
