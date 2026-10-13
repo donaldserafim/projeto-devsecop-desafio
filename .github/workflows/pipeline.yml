@@ -54,21 +54,51 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
 
+
+      ##instala ao Python para ser usado no SemGrep
       - name: 🐍 Configurar Python para o SAST
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      # Analisa o código e interrompe a pipeline quando encontra vulnerabilidades.
-      - name: 🔍 SAST - Semgrep
+
+      ##instala ao semgrep SAST
+      - name: 🐍 Install SemGrep
         run: |
           python -m pip install semgrep
-          # semgrep scan: executa a análise estática do código (SAST).
-          # --config auto: seleciona regras do Registry conforme as linguagens e frameworks do projeto.
-          # --config p/xss: adiciona regras para detectar Cross-Site Scripting (XSS).
-          # --error: retorna código de saída 1 quando encontra problemas, fazendo o step falhar.
-          # src/: limita a análise aos arquivos do diretório src.
-          semgrep scan --config auto --config p/xss --error src/
+
+
+      # Analisa o código e interrompe a pipeline quando encontra vulnerabilidades.
+      # semgrep scan: executa a análise estática do código (SAST).
+      # --config auto: seleciona regras do Registry conforme as linguagens e frameworks do projeto.
+      # --config p/xss: adiciona regras para detectar Cross-Site Scripting (XSS).
+      # --error: retorna código de saída 1 quando encontra problemas, fazendo o step falhar.
+      # src/: limita a análise aos arquivos do diretório src.
+      - name: 🔍 SAST - Semgrep
+        run: |
+          semgrep scan --config auto --config p/xss --error --json --output semgrep.json src/
+
+
+      - name: Semgrep Summary
+        if: always()
+        run: |
+          echo "## 🔍 Semgrep Security Scan" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          if [ -f semgrep.json ]; then
+            jq -r '
+              "| Severidade | Regra | Arquivo | Linha |",
+              "|---|---|---|---|",
+              (.results[] |
+                "| \(.extra.severity) | \(.check_id) | \(.path) | \(.start.line) |")
+            ' semgrep.json >> "$GITHUB_STEP_SUMMARY"
+
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "**Total de vulnerabilidades:** $(jq '.results | length' semgrep.json)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Scan não gerou resultados." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
 
       # ❌ PASSO A IMPLEMENTAR — SCA com Grype
       # Dica: primeiro, gere o package-lock pelo npm:
