@@ -88,17 +88,24 @@ jobs:
           outcome: ${{ steps.semgrep.outcome }}
 
 
+      # Saída em html para ficar mais claro os erros.
+      - name: 🔍 Gerar o package-lock
+        run: |
+          echo "Gerando o package-lock"
+          npm install --package-lock-only --no-audit --no-fund
 
+      # Instalar o Grype
+      - name: 🔍 Instalar o grype
+        run: |
+          echo "Instalando o Grype"
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
 
-      # ❌ PASSO A IMPLEMENTAR — SCA com Grype
-      # Dica: primeiro, gere o package-lock pelo npm:
-      #   npm install --package-lock-only --no-audit --no-fund
-      # Depois instale o Grype:
-      #   curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
-      # E rode:
-      #   grype dir:. --fail-on medium
-      - name: 📦 SCA - Grype
-        run: echo "TODO - implemente o SCA com Grype aqui"
+      #rodar o Grype
+      - name: Executar o grype
+        run: |
+          echo "Iniciando a execução do grype"
+          grype dir:. --fail-on medium
+
 
       # ── Empacota o site em um artefato tar (formato que o Pages consome)
       - name: 📦 Empacotar artefato do site
