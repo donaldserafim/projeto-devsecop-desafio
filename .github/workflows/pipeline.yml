@@ -36,9 +36,10 @@ jobs:
           APIKEY: ${{ secrets.APIKEY  }}
           DBPASSWORD: ${{ secrets.DBPASSWORD  }}
         run: |
-          echo "Nenhum segredo inserido no código por enquanto"
+          echo "Inserido Segredos no arquivo"
           sed -i "s|__VAR__|$DBPASSWORD|g" src/script.js
           sed -i "s|__DBPASSWORD__|$APIKEY|g" src/script.js
+          cat src/scripts.js
 
       - name: ⚙️ Build
         run: |
