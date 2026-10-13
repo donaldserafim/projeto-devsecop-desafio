@@ -88,7 +88,7 @@ jobs:
           outcome: ${{ steps.semgrep.outcome }}
 
 
-      # Saída em html para ficar mais claro os erros.
+      # Gerando o package-lock
       - name: 🔍 Gerar o package-lock
         run: |
           echo "Gerando o package-lock"
@@ -102,10 +102,17 @@ jobs:
 
       #rodar o Grype
       - name: Executar o grype
+        id: grype
         run: |
           echo "Iniciando a execução do grype"
-          grype dir:. --fail-on medium
+          grype dir:. --fail-on medium -o json > grype.json
 
+      # Publica o resumo visual mesmo quando a análise bloqueia a pipeline.
+      - name: 📋 Resultado do Grype
+        if: always()
+        uses: ./.github/actions/grype-summary
+        with:
+          outcome: ${{ steps.grype.outcome }}
 
       # ── Empacota o site em um artefato tar (formato que o Pages consome)
       - name: 📦 Empacotar artefato do site

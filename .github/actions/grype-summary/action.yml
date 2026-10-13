@@ -1,0 +1,19 @@
+name: Resumo do Grype
+description: Publica o relatório JSON do Grype no resumo da execução do GitHub Actions.
+inputs:
+  outcome:
+    description: Resultado da etapa de análise do Grype.
+    required: true
+  report:
+    description: Caminho do relatório JSON gerado pelo Grype.
+    default: grype.json
+runs:
+  using: composite
+  steps:
+    - name: Gerar resumo
+      shell: bash
+      env:
+        GRYPE_OUTCOME: ${{ inputs.outcome }}
+        GRYPE_REPORT: ${{ inputs.report }}
+        SUMMARY_ACTION_PATH: ${{ github.action_path }}
+      run: python "$SUMMARY_ACTION_PATH/summary.py"
