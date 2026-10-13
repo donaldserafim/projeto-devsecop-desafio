@@ -1,7 +1,7 @@
-const API_KEY = "ghp_xK92mNpL34rTvQ87wZaB56cDeFgHiJkLL4";
-const DB_PASSWORD = "admin@prod#202444";
+const API_KEY = "__APIKEY__";
+const DB_PASSWORD = "__DBPASSWORD__";
 
-// Busca tarefas do "banco de dados "
+
 fetch('db.json')
     .then(response => response.json())
     .then(data => {
