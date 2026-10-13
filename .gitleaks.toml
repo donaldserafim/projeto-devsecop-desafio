@@ -1,0 +1,23 @@
+title = "Detecção de segredos — Desafio DevSecOps"
+
+# Preserva as regras oficiais para tokens e outros provedores.
+[extend]
+useDefault = true
+
+# Encontrado em src/script.js: DB_PASSWORD com senha literal.
+# Também reconhece nomes como password, db_password e senha.
+[[rules]]
+id = "hardcoded-password"
+description = "Senha literal atribuída a uma variável ou propriedade"
+regex = '''(?i)\b(?:[a-z0-9_]*(?:password|passwd|pwd|senha)[a-z0-9_]*)\b["']?\s*[:=]\s*["']([^"'\r\n]+)["']'''
+secretGroup = 1
+keywords = ["password", "passwd", "pwd", "senha"]
+
+# Encontrado em src/script.js: API_KEY com token no formato ghp_.
+# Detecta também exemplos truncados que podem escapar da regra oficial.
+[[rules]]
+id = "project-github-token"
+description = "Token GitHub com prefixo ghp_ presente no projeto"
+regex = '''\b(ghp_[A-Za-z0-9]{20,})\b'''
+secretGroup = 1
+keywords = ["ghp_"]
