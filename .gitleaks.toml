@@ -13,6 +13,12 @@ regex = '''(?i)\b(?:[a-z0-9_]*(?:password|passwd|pwd|senha)[a-z0-9_]*)\b["']?\s*
 secretGroup = 1
 keywords = ["password", "passwd", "pwd", "senha"]
 
+# Ignora somente o marcador de substituição usado no projeto.
+[rules.allowlist]
+description = "Marcador de senha sem valor secreto"
+regexTarget = "secret"
+regexes = ['''^__DBPASSWORD__$''']
+
 # Encontrado em src/script.js: API_KEY com token no formato ghp_.
 # Detecta também exemplos truncados que podem escapar da regra oficial.
 [[rules]]
