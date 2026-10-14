@@ -44,7 +44,7 @@ jobs:
           ls src/
           echo "Build OK!"
 
-      # ❌ PASSO A IMPLEMENTAR — Secrets Scanning com Gitleaks
+      # IMPLEMENTADO — Secrets Scanning com Gitleaks
       # Dica: use a action oficial "gitleaks/gitleaks-action@v2"
       # foi implementado com a versão mais nova, que é a 3 e adicionado o arquivo de configuração
       # .gitleaks.toml para adicionar a variavel do banco de dados.
