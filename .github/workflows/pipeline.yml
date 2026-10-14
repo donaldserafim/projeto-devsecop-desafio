@@ -1,7 +1,6 @@
 name: 🔐 Pipeline DevSecOps
 
 on:
-  workflow_dispatch: 
   push:
     branches:
       - main
