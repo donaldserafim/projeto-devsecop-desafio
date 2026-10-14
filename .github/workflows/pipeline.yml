@@ -134,7 +134,7 @@ jobs:
       - name: ✍️ Instalar Cosign
         uses: sigstore/cosign-installer@v3
 
-      # ❌ PASSO A IMPLEMENTAR — Assinatura via Cosign
+      # Implementado — Assinatura via Cosign
       # Este passo NÃO assina de verdade — ele gera um bundle falso, só para
       # demonstração.
       #
@@ -142,7 +142,7 @@ jobs:
       #   cosign sign-blob artifact.tar --bundle artifact.sigstore.json --yes
       - name: ✍️ Assinar artefato
         run: |
-          echo '{ "mock": "assinatura-invalida-para-demonstracao" }' > artifact.sigstore.json
+          cosign sign-blob artifact.tar --bundle artifact.sigstore.json --yes
           echo "Assinatura MOCK gerada."
 
       # ── Publica o artefato + bundle de assinatura para o próximo job
@@ -169,7 +169,7 @@ jobs:
 
     steps:
       - name: ⬇️ Baixar o artefato assinado
-        uses: actions/download-artifact@v4.3.0
+        uses: actions/download-artifact@v4.3.1
         with:
           name: site-assinado
 
@@ -177,13 +177,13 @@ jobs:
         uses: sigstore/cosign-installer@v3
 
       # ⚠️ Usa o Cosign para validar assinatura do artefato - descomentar após assinatura
-      # - name: 🔎 Verificar assinatura do artefato
-      #  run: |
-      #    cosign verify-blob artifact.tar \
-      #      --bundle artifact.sigstore.json \
-      #      --certificate-identity-regexp "^https://github.com/${{ github.repository }}/.github/workflows/.*" \
-      #      --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
-      #    echo "Assinatura válida — artefato íntegro e autêntico."
+      - name: 🔎 Verificar assinatura do artefato
+        run: |
+          cosign verify-blob artifact.tar \
+            --bundle artifact.sigstore.json \
+            --certificate-identity-regexp "^https://github.com/${{ github.repository }}/.github/workflows/.*" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
+          echo "Assinatura válida — artefato íntegro e autêntico."
 
       # Descompacta o site para publicar
       - name: 📂 Extrair site verificado
