@@ -1,7 +1,6 @@
 const API_KEY = "__APIKEY__";
 const DB_PASSWORD = "__DBPASSWORD__";
 
-
 fetch('db.json')
     .then(response => response.json())
     .then(data => {
